@@ -69,11 +69,11 @@ mvnw test
 
 ### JUnit Test Results
 
-![JUnit Test Results](sweetshop/junit_test.png)
+![JUnit Test Results](https://github.com/satikshac/sweetshop/blob/master/junit_test.png)
 
 ### Maven Test Success
 
-![Maven Test Success](sweetshop/mvn_test.png)
+![Maven Test Success](https://github.com/satikshac/sweetshop/blob/master/maven_test.png)
 
 ---
 
