@@ -2,6 +2,8 @@ package com.incubyte.sweetshop.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -10,18 +12,25 @@ import com.incubyte.sweetshop.repository.UserRepository;
 
 class UserServiceTest {
 
-    @Test
-    void shouldRegisterUser() {
+    private UserRepository fakeRepository() {
+        return new UserRepository() {
 
-        UserRepository repo = new UserRepository() {
             @Override
             public <S extends User> S save(S entity) {
                 return entity;
             }
-        };
 
+            @Override
+            public Optional<User> findByUsername(String username) {
+                return Optional.empty();
+            }
+        };
+    }
+
+    @Test
+    void shouldRegisterUser() {
         UserService service =
-                new UserService(repo, new BCryptPasswordEncoder());
+                new UserService(fakeRepository(), new BCryptPasswordEncoder());
 
         User user = new User();
         user.setPassword("password123");
@@ -35,16 +44,8 @@ class UserServiceTest {
 
     @Test
     void shouldNotRegisterUserWhenPasswordIsEmpty() {
-
-        UserRepository repo = new UserRepository() {
-            @Override
-            public <S extends User> S save(S entity) {
-                return entity;
-            }
-        };
-
         UserService service =
-                new UserService(repo, new BCryptPasswordEncoder());
+                new UserService(fakeRepository(), new BCryptPasswordEncoder());
 
         User user = new User();
         user.setPassword("");
