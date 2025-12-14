@@ -29,3 +29,12 @@ The project follows clean code principles and includes unit tests using JUnit.
 git clone https://github.com/satikshac/sweetshop.git
 cd sweetshop
 mvn clean test
+
+## Screenshots
+
+### JUnit Test Results
+![JUnit Test Results](sweetshop/junit_test.png)
+
+### Maven Test Success
+![Maven Test Success](screenshots/mvn_test.png)
+
