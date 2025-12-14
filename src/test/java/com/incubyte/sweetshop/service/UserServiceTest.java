@@ -13,26 +13,47 @@ class UserServiceTest {
     @Test
     void shouldRegisterUser() {
 
-        // ✅ Fake repository (NO Mockito, NO lambda)
-        UserRepository fakeRepository = new UserRepository() {
+        UserRepository repo = new UserRepository() {
             @Override
-            public User save(User user) {
-                return user;
+            public <S extends User> S save(S entity) {
+                return entity;
             }
         };
 
-        UserService userService =
-                new UserService(fakeRepository, new BCryptPasswordEncoder());
+        UserService service =
+                new UserService(repo, new BCryptPasswordEncoder());
 
         User user = new User();
-
-        // ⚠️ USE ONLY FIELDS THAT EXIST IN YOUR User ENTITY
         user.setPassword("password123");
 
-        User savedUser = userService.register(user);
+        User savedUser = service.register(user);
 
         assertNotNull(savedUser);
         assertNotEquals("password123", savedUser.getPassword());
         assertEquals("USER", savedUser.getRole());
+    }
+
+    @Test
+    void shouldNotRegisterUserWhenPasswordIsEmpty() {
+
+        UserRepository repo = new UserRepository() {
+            @Override
+            public <S extends User> S save(S entity) {
+                return entity;
+            }
+        };
+
+        UserService service =
+                new UserService(repo, new BCryptPasswordEncoder());
+
+        User user = new User();
+        user.setPassword("");
+
+        Exception ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> service.register(user)
+        );
+
+        assertEquals("Password cannot be empty", ex.getMessage());
     }
 }

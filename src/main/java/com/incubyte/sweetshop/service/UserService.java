@@ -12,7 +12,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    // ✅ THIS constructor MUST exist
+    // REQUIRED constructor
     public UserService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -20,8 +20,14 @@ public class UserService {
     }
 
     public User register(User user) {
+
+        if (user.getPassword() == null || user.getPassword().isBlank()) {
+            throw new IllegalArgumentException("Password cannot be empty");
+        }
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole("USER");
+
         return userRepository.save(user);
     }
 }
